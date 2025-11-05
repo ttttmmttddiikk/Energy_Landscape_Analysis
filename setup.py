@@ -9,6 +9,7 @@ setup(
         "matplotlib",
         "seaborn",
         "pandas",
+        "scipy",
         "pyvis",
         "networkx",
     ],

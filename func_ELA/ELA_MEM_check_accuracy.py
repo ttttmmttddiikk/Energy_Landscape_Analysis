@@ -132,7 +132,6 @@ def return_I2_IN(binarizedData_df:pd.DataFrame, h_1darray:np.ndarray, J_2darray:
     #datas_df (stateを0,1,1 -> 011)
     datas_df = binarizedData_df.astype('int')
     datas_df["state"] = datas_df.apply(lambda row: "".join([str(v) for _, v in enumerate(row)]), axis=1)
-    print(datas_df)
     #-----------
     #var
     n_feature = len(h_1darray)
@@ -220,7 +219,6 @@ def return_r(binarizedData_df:pd.DataFrame, h_1darray:np.ndarray, J_2darray:np.n
     #datas_df (stateを0,1,1 -> 011)
     datas_df = binarizedData_df.astype('int')
     datas_df["state"] = datas_df.apply(lambda row: "".join([str(v) for _, v in enumerate(row)]), axis=1)
-    #print(datas_df)
     #-----------
     #var
     n_feature = len(h_1darray)

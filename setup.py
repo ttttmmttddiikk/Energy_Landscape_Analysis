@@ -9,7 +9,6 @@ setup(
         "matplotlib",
         "seaborn",
         "pandas",
-        "torch",
         "pyvis",
         "networkx",
     ],

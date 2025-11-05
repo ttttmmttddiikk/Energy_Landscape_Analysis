@@ -20,8 +20,10 @@ def return_edge_df(info_ALLState_df:pd.DataFrame) -> pd.DataFrame:
         state1_use_list = [state1_use for _ in range(len(state2_use_list))]
         #df_concat
         df_concat = pd.DataFrame(data=list(zip(*[state1_use_list,state2_use_list])), columns=["state1","state2"], index=None)
+        #remove empty df
+        list_df_concat = [df for df in [edge_df, df_concat] if not df.empty]
         #concat
-        edge_df = pd.concat([edge_df,df_concat], axis=0)
+        edge_df = pd.concat(list_df_concat, axis=0)
     return edge_df
 
 #-------------------------
@@ -31,8 +33,6 @@ def calc_TP_onlySS(info_ALLState_df:pd.DataFrame, diag_value:Union[int, str],
                    print_progress:str=False) -> pd.DataFrame:
     #-----------------------------------------------------------------------------------
     #----------------------
-    #read
-    #info_ALLState_df = pd.read_csv(path_read_info_ALLState, index_col=None, header=0, sep=',', encoding="utf-8", dtype={"state":str,"E":float,"SS":bool,"RA":str,"next_state":str})
     #----------------------
     #edge_df
     edge_df = return_edge_df(info_ALLState_df=info_ALLState_df)
@@ -62,8 +62,8 @@ def calc_TP_onlySS(info_ALLState_df:pd.DataFrame, diag_value:Union[int, str],
     #SSのstateのlist
     state_list = info_ALLState_df.query('SS==True')["state"].to_list()
     #TP_onlySS_df, TP_onlySS_name_df
-    TP_onlySS_df = pd.DataFrame(data=[[False for j in range(len(state_list))] for i in range(len(state_list))], columns=state_list, index=state_list)
-    TP_onlySS_name_df = pd.DataFrame(data=[[False for j in range(len(state_list))] for i in range(len(state_list))], columns=state_list, index=state_list)
+    TP_onlySS_df = pd.DataFrame(data=[[None for j in range(len(state_list))] for i in range(len(state_list))], columns=state_list, index=state_list)
+    TP_onlySS_name_df = pd.DataFrame(data=[[None for j in range(len(state_list))] for i in range(len(state_list))], columns=state_list, index=state_list)
     #----------------------
     #calc
     i = 0
@@ -81,7 +81,7 @@ def calc_TP_onlySS(info_ALLState_df:pd.DataFrame, diag_value:Union[int, str],
         #df_TPに追加
         for _, state1_use in enumerate(state_list):
             for _, state2_use in enumerate(state_list):
-                if TP_onlySS_df.loc[state1_use, state2_use] == False:
+                if TP_onlySS_df.loc[state1_use, state2_use] is None: #まだTP_onlySS_dfにEが登録されていない場合のみ
                     if nx.has_path(G=G, source=state1_use, target=state2_use) == False: #初めてパスがなくなった時に、df_TPにEを追加 (&計算速度のために二つのifに分けている)
                         #----------------------
                         #register (TP_df)

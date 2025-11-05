@@ -1,9 +1,3 @@
-#https://peluigi.hatenablog.com/entry/2018/06/26/232846
-#https://sites.google.com/site/ezakitakahiro/software
-#https://tezk.hatenablog.com/entry/2017/07/10/144941
-#https://github.com/tkEzaki/energy-landscape-analysis
-#https://royalsocietypublishing.org/doi/10.1098/rsta.2016.0287
-#https://qiita.com/sci_Haru/items/1ad3b246a2c931a9833d
 import numpy as np
 import pandas as pd
 
@@ -65,12 +59,6 @@ def return_mean_corr_model(h_1darray:np.ndarray, J_2darray:np.ndarray) -> Tuple[
     #mean_model, corr_model
     mean_model = np.sum((np.array([P_1darray for _ in range(n_feature)])*ALLstate_ndarray.T), axis=1)
     corr_model = np.dot(ALLstate_ndarray.T, ALLstate_ndarray*(np.array([P_1darray for _ in range(n_feature)]).T))
-    #print((np.array([P_1darray for _ in range(n_feature)]).T))
-    #print(ALLstate_ndarray*(np.array([P_1darray for _ in range(n_feature)]).T))
-    #print(mean_model)
-    #print(np.array([P_1darray for _ in range(n_feature)]).T)
-    #print(ALLstate_ndarray*(np.array([P_1darray for _ in range(n_feature)]).T))
-    #print(corr_model)
     #-----------
     #return
     return mean_model, corr_model
@@ -80,7 +68,7 @@ def return_mean_corr_model(h_1darray:np.ndarray, J_2darray:np.ndarray) -> Tuple[
 #-----------------------------------------------------------------------------------
 from numpy import linalg
 from scipy.spatial.distance import squareform
-def calc_MEM_LikelihoodMaximization(binarizedData_ndarray:np.ndarray, ipsilon:float=1, permissible_Error:float=0.000001, 
+def calc_MEM_LikelihoodMaximization(binarizedData_ndarray:np.ndarray, ipsilon:float=0.001, permissible_Error:float=0.005, 
                                     save_path_h_and_J:str=False, save_path_h:str=False, save_path_J:str=False,
                                     print_progress:str=False, save_progress_of_estimation:list=False) -> Tuple[np.ndarray, np.ndarray]:
     #-----------
@@ -98,7 +86,7 @@ def calc_MEM_LikelihoodMaximization(binarizedData_ndarray:np.ndarray, ipsilon:fl
     #-----------
     #var
     iter_max = 50000000
-    permissible_Error = permissible_Error #0.00000001
+    permissible_Error = permissible_Error
     ipsilon = ipsilon
     #-----------
     #mean_data, corr_data
@@ -115,13 +103,12 @@ def calc_MEM_LikelihoodMaximization(binarizedData_ndarray:np.ndarray, ipsilon:fl
         mean_model, corr_model = return_mean_corr_model(h_1darray=h, J_2darray=J)
         #-----------
         #dh, dJ
-        dh = n_data*(mean_data - mean_model) #(ipsilon/n_data)*(mean_data - mean_model)
-        dJ = n_data*(corr_data - corr_model) #(ipsilon/n_data)*(corr_data - corr_model)
+        dh = n_data*(mean_data - mean_model)
+        dJ = n_data*(corr_data - corr_model)
         #set diag to 0
         dJ = dJ - np.diag(np.diag(dJ))
         #-----------
         #check Error
-        #https://qiita.com/sci_Haru/items/1ad3b246a2c931a9833d
         error = np.sqrt(linalg.norm(dJ,2)**2 + linalg.norm(dh,2)**2)/(n_feature*(n_feature+1))
         if print_progress != False:
             print(error)
@@ -133,13 +120,13 @@ def calc_MEM_LikelihoodMaximization(binarizedData_ndarray:np.ndarray, ipsilon:fl
             break
         #-----------
         #update
-        h = h + ipsilon*dh #h = h + (ipsilon/n_data)*dh
-        J = J + ipsilon*dJ #J = J + (ipsilon/n_data)*dJ
+        h = h + ipsilon*dh
+        J = J + ipsilon*dJ
     #-----------
     #save
     if save_path_h_and_J != False:
         #change J to condensed_distance_matrix
-        J_condensed_distance_matrix = squareform(np.tril(J).T + np.tril(J)) #squareform(J)はfloatの微妙な違いがあるためエラー
+        J_condensed_distance_matrix = squareform(np.tril(J).T + np.tril(J))
         #concatenate h and J
         h_and_J_ndarray = np.concatenate([h, J_condensed_distance_matrix], 0)
         #make df

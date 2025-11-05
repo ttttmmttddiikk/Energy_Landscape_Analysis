@@ -1,4 +1,3 @@
-#https://royalsocietypublishing.org/doi/10.1098/rsta.2016.0287
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
@@ -56,7 +55,7 @@ def plot_model_empirical(binarizedData_df:pd.DataFrame, h_1darray:np.ndarray, J_
     #exp(-E) :len(exp_E)=2^n_feature
     exp_E_1darray = np.exp(-E)
     #Z
-    Z_int = sum(exp_E_1darray) #Z = sum(np.exp(-np.dot(h_1darray, ALLstate_ndarray.T).flatten() - np.array([np.dot(s_ndarray.T, np.dot(J_2darray,s_ndarray)) for _, s_ndarray in enumerate(ALLstate_ndarray)])/2 ))
+    Z_int = sum(exp_E_1darray)
     #P
     P_1darray = exp_E_1darray/Z_int #np.sum(P_model_1darray)=1
     #P_model
@@ -67,7 +66,7 @@ def plot_model_empirical(binarizedData_df:pd.DataFrame, h_1darray:np.ndarray, J_
     print("P_empirical",df_ALLstate["P_empirical"].sum())
     print("P_model",df_ALLstate["P_model"].sum())
     #-----------
-    #plot 誤差 train (x:P_empirical y:P_model)
+    #plot loss train (x:P_empirical y:P_model)
     #-----------
     #x_list, y_list
     x_list = df_ALLstate["P_empirical"].tolist()
@@ -78,8 +77,7 @@ def plot_model_empirical(binarizedData_df:pd.DataFrame, h_1darray:np.ndarray, J_
     #plot scatter
     ax.scatter(x=x_list, y=y_list, s=80, c="black")
     #plot y=x
-    #x=np.linspace(0, max(x_list+y_list), 15) # 直線をプロット
-    x=np.linspace(0, lim, 100) # 直線をプロット
+    x=np.linspace(0, lim, 100)
     y=x
     ax.plot(x, y, color = "black")
     #plot r I2/IN
@@ -90,7 +88,7 @@ def plot_model_empirical(binarizedData_df:pd.DataFrame, h_1darray:np.ndarray, J_
     plt.text(x=0.99, y=1*0.1, s="$I_2/I_N = {}$".format("{:.5f}".format(I2_IN)), 
                          fontdict=dict(fontsize=40,fontstyle="italic"), va='top', ha='right', transform=ax.transAxes)
     #setting
-    ax.tick_params(labelsize = 30)#軸の大きさ
+    ax.tick_params(labelsize = 30)
     ax.set_xlabel("P_data",fontsize=50) #P_empirical
     ax.set_ylabel("P_model",fontsize=50)
     #plt.grid()
@@ -100,19 +98,12 @@ def plot_model_empirical(binarizedData_df:pd.DataFrame, h_1darray:np.ndarray, J_
         plt.yscale('log')
     else:
         padding=0.003
-        ax.set_xlim([-padding,lim+padding]) #ax.set_xlim([-padding,max(x_list+y_list)+padding])
-        ax.set_ylim([-padding,lim+padding]) #ax.set_ylim([-padding,max(x_list+y_list)+padding])
+        ax.set_xlim([-padding,lim+padding])
+        ax.set_ylim([-padding,lim+padding])
     #save
     if path_save != False:
         plt.savefig(path_save, bbox_inches="tight")
     plt.show()
-#test
-#n_state = 5
-#binarizedData_df = pd.DataFrame(data=np.random.randint(0, 2, (300,n_state)))
-#h_1darray=np.random.rand(n_state)
-#J_2darray=np.random.normal(-1, 0.5, (n_state, n_state))
-
-#plot_model_empirical(binarizedData_df=binarizedData_df, h_1darray=h_1darray, J_2darray=J_2darray)
 
 
 #-----------
@@ -137,12 +128,8 @@ def plot_model_empirical_from_path(binarizedData_df:pd.DataFrame, h_path:str, J_
 #https://docs.scipy.org/doc/scipy/reference/generated/scipy.stats.entropy.html
 from scipy.stats import entropy
 
-def return_ShannonEntropy(Px_1darray:np.ndarray) -> int: #Px_1darray,Qx_1darrayは確率 ex.[3/5, 1/5, 1/5]
+def return_ShannonEntropy(Px_1darray:np.ndarray) -> int: #Px_1darray: ex.[3/5, 1/5, 1/5]
     return entropy(Px_1darray)
-#test 
-#p = np.array([5/30, 10/30, 2/30, 3/30, 5/30, 5/30]) #dist p
-#q = np.array([0, 0, 0, 1/2, 1/2,0]) #dist q
-#return_ShannonEntropy(Px_1darray=q) #calc ShannonEntropy
 
 #-----------
 def return_I2_IN(binarizedData_df:pd.DataFrame, h_1darray:np.ndarray, J_2darray:np.ndarray) -> int:
@@ -165,7 +152,7 @@ def return_I2_IN(binarizedData_df:pd.DataFrame, h_1darray:np.ndarray, J_2darray:
     #exp(-E) :len(exp_E)=2^n_feature
     exp_E_1darray = np.exp(-E)
     #Z
-    Z_int = sum(exp_E_1darray) #Z = sum(np.exp(-np.dot(h_1darray, ALLstate_ndarray.T).flatten() - np.array([np.dot(s_ndarray.T, np.dot(J_2darray,s_ndarray)) for _, s_ndarray in enumerate(ALLstate_ndarray)])/2 ))
+    Z_int = sum(exp_E_1darray)
     #P
     P_1darray = exp_E_1darray/Z_int #np.sum(P_model_1darray)=1
     #P_model
@@ -180,7 +167,7 @@ def return_I2_IN(binarizedData_df:pd.DataFrame, h_1darray:np.ndarray, J_2darray:
     #exp(-E) :len(exp_E)=2^n_feature
     exp_E_1darray = np.exp(-E)
     #Z
-    Z_int = sum(exp_E_1darray) #Z = sum(np.exp(-np.dot(h_1darray, ALLstate_ndarray.T).flatten() - np.array([np.dot(s_ndarray.T, np.dot(J_2darray,s_ndarray)) for _, s_ndarray in enumerate(ALLstate_ndarray)])/2 ))
+    Z_int = sum(exp_E_1darray)
     #P
     P_1darray = exp_E_1darray/Z_int #np.sum(P_model_1darray)=1
     #P_model
@@ -226,31 +213,18 @@ def return_I2_IN(binarizedData_df:pd.DataFrame, h_1darray:np.ndarray, J_2darray:
 #-----------------------------------------------------------------------------------
 #-----------
 #KL_divergence (relative entropy)
-#https://docs.scipy.org/doc/scipy/reference/generated/scipy.stats.entropy.html
-#https://docs.scipy.org/doc/scipy/reference/generated/scipy.special.rel_entr.html#scipy.special.rel_entr
-#https://stackoverflow.com/questions/63369974/3-functions-for-computing-relative-entropy-in-scipy-whats-the-difference
-"""from scipy.stats import entropy
-def return_KL_div(Px_1darray:np.ndarray, Qx_1darray:np.ndarray) -> int: #Px_1darray,Qx_1darrayは確率 ex.[3/5, 1/5, 1/5]
-    return entropy(Px_1darray, Qx_1darray)"""
-
-def return_KL_div(Px_1darray:np.ndarray, Qx_1darray:np.ndarray) -> int: #Px_1darray,Qx_1darrayは確率 ex.Px_1darray=[3/5, 1/5, 1/5]
+def return_KL_div(Px_1darray:np.ndarray, Qx_1darray:np.ndarray) -> int: #Px_1darray: ex.Px_1darray=[3/5, 1/5, 1/5]
     KL_div = 0
     for p, q in zip(Px_1darray,Qx_1darray):
         if p<0 or q<0:
             raise ValueError("error!!!!!")
         elif q==0:
             KL_div += 0
-            #raise ValueError("error!!!!!")
         elif p==0:
             KL_div += 0
         else: #p>0 and q>0
             KL_div += p*np.log(p/q)
     return KL_div
-#test 
-#p = np.array([2/10, 3/10, 1/10, 3/10, 1/10]) #dist p
-#q = np.array([1/10, 1/10, 1/10, 4/10, 3/10]) #dist q
-#print(return_KL_div(Px_1darray=p, Qx_1darray=q)) #calc kL_div
-#print(return_KL_div(Px_1darray=q, Qx_1darray=p)) #calc kL_div
 
 #-----------
 def return_r(binarizedData_df:pd.DataFrame, h_1darray:np.ndarray, J_2darray:np.ndarray) -> int:
@@ -273,7 +247,7 @@ def return_r(binarizedData_df:pd.DataFrame, h_1darray:np.ndarray, J_2darray:np.n
     #exp(-E) :len(exp_E)=2^n_feature
     exp_E_1darray = np.exp(-E)
     #Z
-    Z_int = sum(exp_E_1darray) #Z = sum(np.exp(-np.dot(h_1darray, ALLstate_ndarray.T).flatten() - np.array([np.dot(s_ndarray.T, np.dot(J_2darray,s_ndarray)) for _, s_ndarray in enumerate(ALLstate_ndarray)])/2 ))
+    Z_int = sum(exp_E_1darray)
     #P
     P_1darray = exp_E_1darray/Z_int #np.sum(P_model_1darray)=1
     #P_model
@@ -288,7 +262,7 @@ def return_r(binarizedData_df:pd.DataFrame, h_1darray:np.ndarray, J_2darray:np.n
     #exp(-E) :len(exp_E)=2^n_feature
     exp_E_1darray = np.exp(-E)
     #Z
-    Z_int = sum(exp_E_1darray) #Z = sum(np.exp(-np.dot(h_1darray, ALLstate_ndarray.T).flatten() - np.array([np.dot(s_ndarray.T, np.dot(J_2darray,s_ndarray)) for _, s_ndarray in enumerate(ALLstate_ndarray)])/2 ))
+    Z_int = sum(exp_E_1darray)
     #P
     P_1darray = exp_E_1darray/Z_int #np.sum(P_model_1darray)=1
     #P_model
@@ -305,13 +279,6 @@ def return_r(binarizedData_df:pd.DataFrame, h_1darray:np.ndarray, J_2darray:np.n
         return row
     df_ALLstate = df_ALLstate.apply(func_calc_P, axis=1)
     #-----------
-    #print
-    #print(df_ALLstate)
-    #print("P_1",df_ALLstate["P_1"].sum())
-    #print("P_2",df_ALLstate["P_2"].sum())
-    #print("P_N",df_ALLstate["P_N"].sum())
-
-    #-----------
     #calc r
     #-----------
     #P_1, P_2, P_N
@@ -319,7 +286,6 @@ def return_r(binarizedData_df:pd.DataFrame, h_1darray:np.ndarray, J_2darray:np.n
     P_2 = df_ALLstate["P_2"].values
     P_N = df_ALLstate["P_N"].values
     #r
-    #r = (return_KL_div(Px_1darray=P_1, Qx_1darray=P_N) - return_KL_div(Px_1darray=P_2, Qx_1darray=P_N)) / return_KL_div(Px_1darray=P_1, Qx_1darray=P_N)
     r = (return_KL_div(Px_1darray=P_N, Qx_1darray=P_1) - return_KL_div(Px_1darray=P_N, Qx_1darray=P_2)) / return_KL_div(Px_1darray=P_N, Qx_1darray=P_1)
     #-----------
     #return

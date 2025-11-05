@@ -12,5 +12,6 @@ setup(
         "scipy",
         "pyvis",
         "networkx",
+        "tqdm"
     ],
 )

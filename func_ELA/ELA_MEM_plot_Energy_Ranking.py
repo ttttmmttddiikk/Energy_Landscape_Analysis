@@ -40,7 +40,7 @@ def Plot_Energy_Ranking_TopN(path_read_info_ALLState:str, TopN:int, tick_params_
 
 
 #-----------------------------------------------------------------------------------
-def Plot_Energy_Ranking(path_read_info_ALLState:str, tick_params_size:int=20, path_save=False) -> None:
+def Plot_Energy_Ranking(path_read_info_ALLState:str, tick_params_size:int=7, path_save=False) -> None:
     #----------------------
     #read
     info_ALLState_df = pd.read_csv(path_read_info_ALLState, index_col=None, header=0, sep=',', encoding="utf-8", dtype={"state":str,"E":float,"SS":bool,"RA":str,"next_state":str})
@@ -58,8 +58,8 @@ def Plot_Energy_Ranking(path_read_info_ALLState:str, tick_params_size:int=20, pa
     ax.barh(y=x, width=y, color="black") #https://matplotlib.org/3.1.1/api/_as_gen/matplotlib.pyplot.barh.html
     #---------------------
     #setting
-    ax.tick_params(axis="x", labelsize = tick_params_size)#軸の大きさ
-    ax.tick_params(axis="y", labelsize = 7)#軸の大きさ
+    ax.tick_params(axis="x", labelsize = 20)#軸の大きさ
+    ax.tick_params(axis="y", labelsize = tick_params_size)#軸の大きさ
     ax.set_xlabel("Energy",fontsize=30)
     ax.set_ylabel("States",fontsize=30)
     plt.margins(y=0.001) #Remove empty "padding" https://stackoverflow.com/questions/35225097/how-to-remove-empty-padding-in-matplotlib-barh-plot

@@ -61,11 +61,6 @@ def plot_model_empirical(binarizedData_df:pd.DataFrame, h_1darray:np.ndarray, J_
     #P_model
     df_ALLstate["P_model"] = P_1darray
     #-----------
-    #print
-    print(df_ALLstate)
-    print("P_empirical",df_ALLstate["P_empirical"].sum())
-    print("P_model",df_ALLstate["P_model"].sum())
-    #-----------
     #plot loss train (x:P_empirical y:P_model)
     #-----------
     #x_list, y_list
@@ -183,13 +178,6 @@ def return_I2_IN(binarizedData_df:pd.DataFrame, h_1darray:np.ndarray, J_2darray:
         #return
         return row
     df_ALLstate = df_ALLstate.apply(func_calc_P, axis=1)
-    #-----------
-    #print
-    print(df_ALLstate)
-    print("P_1",df_ALLstate["P_1"].sum())
-    print("P_2",df_ALLstate["P_2"].sum())
-    print("P_N",df_ALLstate["P_N"].sum())
-
     #-----------
     #calc I2_IN
     #-----------

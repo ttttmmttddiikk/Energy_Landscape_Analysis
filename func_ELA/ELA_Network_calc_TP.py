@@ -33,9 +33,6 @@ def calc_TP(info_ALLState_df:pd.DataFrame, diag_value:Union[int, str],
             print_progress:str=False) -> pd.DataFrame:
     #-----------------------------------------------------------------------------------
     #----------------------
-    #read
-    #info_ALLState_df = pd.read_csv(path_read_info_ALLState, index_col=None, header=0, sep=',', encoding="utf-8", dtype={"state":str,"E":float,"SS":bool,"RA":str,"next_state":str})
-    #----------------------
     #edge_df
     edge_df = return_edge_df(info_ALLState_df=info_ALLState_df)
     #----------------------
@@ -62,8 +59,8 @@ def calc_TP(info_ALLState_df:pd.DataFrame, diag_value:Union[int, str],
     #----------------------
     #TP_df, TP_name_df
     columnNames_list = E_df["state"].to_list()
-    TP_df = pd.DataFrame(data=[[False for j in range(len(columnNames_list))] for i in range(len(columnNames_list))], columns=columnNames_list, index=columnNames_list)
-    TP_name_df = pd.DataFrame(data=[[False for j in range(len(columnNames_list))] for i in range(len(columnNames_list))], columns=columnNames_list, index=columnNames_list)
+    TP_df = pd.DataFrame(data=[[None for j in range(len(columnNames_list))] for i in range(len(columnNames_list))], columns=columnNames_list, index=columnNames_list)
+    TP_name_df = pd.DataFrame(data=[[None for j in range(len(columnNames_list))] for i in range(len(columnNames_list))], columns=columnNames_list, index=columnNames_list)
     #----------------------
     #calc
     i = 0
@@ -81,7 +78,7 @@ def calc_TP(info_ALLState_df:pd.DataFrame, diag_value:Union[int, str],
         state_list = E_df["state"].to_list()
         for _, state1_use in enumerate(state_list):
             for _, state2_use in enumerate(state_list):
-                if TP_df.loc[state1_use, state2_use] == False:
+                if TP_df.loc[state1_use, state2_use] is None: #まだTP_dfにEが登録されていない場合のみ
                     if nx.has_path(G=G, source=state1_use, target=state2_use) == False: #初めてパスがなくなった時に、TP_dfにEを追加 (&計算速度のために二つのifに分けている)
                         #----------------------
                         #register (TP_df)

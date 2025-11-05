@@ -1,11 +1,9 @@
-#https://www.haya-programming.com/entry/2019/02/16/214750
 import numpy as np
 import pandas as pd
 import seaborn as sns
 import matplotlib
-#matplotlib.rc('font', family='Hiragino Sans')
 import matplotlib.pyplot as plt
-plt.rcParams['font.family'] = 'Arial' # font familyの設定
+plt.rcParams['font.family'] = 'Arial' # setting font family
 
 from scipy.cluster.hierarchy import dendrogram, linkage
 import matplotlib.pyplot as plt
@@ -36,7 +34,7 @@ def collect_leaves(leave_use:str, Z_use :np.ndarray, dn_use:dict) -> list:
 #-----------------------------------------------------------------------------------
 def plot_DG(path_read_TP_onlySS:str, path_read_info_SS:str, featurenames_for_heatmap:list, SS_color_dict:dict, 
             fineTune_y:float, padding_x:float, ylim_min:Tuple[int, float], ylim_max:Tuple[int, float],
-            state_text_fontsize:Tuple[int, float],DG_linewidth:Tuple[int, float],title:str,
+            state_text_fontsize:Tuple[int, float],DG_linewidth:Tuple[int, float],
             path_save_DG:str=False, path_save_DG_heatmap:str=False, show_fig:bool=True) -> None:
     #-------------
     #read
@@ -45,8 +43,6 @@ def plot_DG(path_read_TP_onlySS:str, path_read_info_SS:str, featurenames_for_hea
     info_SS_df = pd.read_csv(path_read_info_SS, index_col=None, header=0, sep=',', encoding="utf-8", dtype={"state":str,"E":float,"SS":bool,"RA":str,"next_state":str})
     #-------------
     #var
-    #state_text_fontsize = 27
-    #DG_linewidth = 7
     y_tick_labelsize = 38
     #-------------
     #plot
@@ -70,7 +66,7 @@ def plot_DG(path_read_TP_onlySS:str, path_read_info_SS:str, featurenames_for_hea
         ft_x = 0
         ft_y = fineTune_y
         #plot text
-        ax.text(pos_x_use-ft_x, pos_y_use-ft_y, info_SS_df["state"].values[0], fontsize=state_text_fontsize, color="black", verticalalignment="top", horizontalalignment="center", fontweight='bold') #color=SS_color_dict[state_use]
+        ax.text(pos_x_use-ft_x, pos_y_use-ft_y, info_SS_df["state"].values[0], fontsize=state_text_fontsize, color="black", verticalalignment="top", horizontalalignment="center", fontweight='bold')
         #-------------
         #軸目盛り,軸ラベル,枠 を消す
         ax.tick_params(labelbottom=False, labelleft=True, labelright=False, labeltop=False)
@@ -81,9 +77,8 @@ def plot_DG(path_read_TP_onlySS:str, path_read_info_SS:str, featurenames_for_hea
         #-------------
         #setting
         ax.set_ylim([ylim_min, ylim_max])
-        ax.tick_params(labelsize=y_tick_labelsize)#軸ラベルの大きさ
+        ax.tick_params(labelsize=y_tick_labelsize)
         plt.xticks(fontsize=24)
-        #plt.xlabel("State",fontsize=18)
         plt.ylabel("Energy",fontsize=45)
         plt.tight_layout()
         #save
@@ -156,8 +151,6 @@ def plot_DG(path_read_TP_onlySS:str, path_read_info_SS:str, featurenames_for_hea
         #----------------------------------------------
         #square-form distance matrix -> condensed_distance_matrix
         condensed_distance_matrix = squareform(TP_onlySS_df.values)
-        #print("condensed_distance_matrix")
-        #print(condensed_distance_matrix)
         #負の値を無くす ValueError: Linkage 'Z' contains negative distances.対策
         min_condensed_distance_matrix = min(condensed_distance_matrix)
         condensed_distance_matrix = condensed_distance_matrix - min_condensed_distance_matrix
@@ -165,25 +158,10 @@ def plot_DG(path_read_TP_onlySS:str, path_read_info_SS:str, featurenames_for_hea
         #----------------------------------------------
         #分類
         Z = linkage(y=condensed_distance_matrix, method='single', metric='euclidean', optimal_ordering=False)
-        #print("Z")
-        #print(Z)
 
         #----------------------------------------------
         #HC
         dn = dendrogram(Z, labels=TP_onlySS_df.index, no_plot=show_fig)
-        #print("dn")
-        #print(dn)
-
-        #----------------------------------------------
-        """
-        #Z
-        [[1.         3.         2.82833605 2.        ] ->4
-        [0.         2.         2.89124433 2.        ] ->5
-        [4.         5.         3.09091256 4.        ]] ->6
-
-        #dn
-        'ivl': ['010111', '111111', '000000', '101010'], 'leaves': [1, 3, 0, 2]
-        """
 
         #----------------------------------------------
         #-------------
@@ -269,7 +247,7 @@ def plot_DG(path_read_TP_onlySS:str, path_read_info_SS:str, featurenames_for_hea
         #plt.xlabel("State",fontsize=18)
         plt.ylabel("Energy",fontsize=45)
         plt.tight_layout()
-        plt.title(title, fontsize=60, pad=40)
+        #plt.title(title, fontsize=60, pad=40)
         #-------------
         #save
         if path_save_DG!=False:
@@ -320,27 +298,6 @@ def plot_DG(path_read_TP_onlySS:str, path_read_info_SS:str, featurenames_for_hea
                         yticklabels=False,#True：pandas.DataFrameの列名をY軸として出力
                         mask=None, #値をマスクするセルを指定
                         )
-        """sns.clustermap(data=heatmap_df, 
-                    pivot_kws=None, 
-                    method='average', 
-                    metric='euclidean', 
-                    z_score=None, 
-                    standard_scale=None, 
-                    figsize=(10, 10), 
-                    cbar_kws=None, 
-                    row_cluster=False, 
-                    col_cluster=False, 
-                    row_linkage=None, 
-                    col_linkage=None, 
-                    row_colors=None, 
-                    col_colors=None, 
-                    mask=None, #値をマスクするセルを指定
-                    dendrogram_ratio=0.01, 
-                    colors_ratio=0.03, 
-                    cbar_pos=None, 
-                    tree_kws=None,
-                    cmap="binary", #Matplotlibのオブジェクトを指定し、カラーマップをデザイン
-                    )"""
         #-------------
         #setting
         ax.set_yticklabels(ax.get_yticklabels(), fontsize=16, rotation=0)

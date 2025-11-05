@@ -20,8 +20,10 @@ def return_edge_df(info_ALLState_df:pd.DataFrame) -> pd.DataFrame:
         state1_use_list = [state1_use for _ in range(len(state2_use_list))]
         #concat_df
         concat_df = pd.DataFrame(data=list(zip(*[state1_use_list,state2_use_list])), columns=["state1","state2"], index=None)
+        #remove empty df
+        list_df_concat = [df for df in [edge_df, concat_df] if not df.empty]
         #concat
-        edge_df = pd.concat([edge_df,concat_df], axis=0)
+        edge_df = pd.concat(list_df_concat, axis=0)
     return edge_df
 
 #-------------------------

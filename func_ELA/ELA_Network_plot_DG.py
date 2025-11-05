@@ -275,7 +275,6 @@ def plot_DG(path_read_TP_onlySS:str, path_read_info_SS:str, featurenames_for_hea
         #make df for heatmap
         list_of_heatmap_values = [[int(s_use) for _, s_use in enumerate(list(state_use))] for _, state_use in enumerate(dn["ivl"])]
         heatmap_df = pd.DataFrame(data=list(zip(*list_of_heatmap_values)), columns=dn["ivl"], index=None) #index=featurenames_for_heatmap
-        #print(heatmap_df)
         #-------------
         #plot heatmap
         sns.heatmap(data=heatmap_df, #ヒートマップを表現する2次元のデータ
